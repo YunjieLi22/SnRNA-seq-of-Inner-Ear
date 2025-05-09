@@ -235,6 +235,61 @@ NEG.CUT= -0.1
 #########################################################
 
 
+co_expression_matrix <- GetAssayData(this_pbmc, slot = "data")[rownames(this_pbmc) %in% co_genes, ]
+cochclea_matrix <- as.data.frame(co_expression_matrix)
+co_pseudotime <- pbmc.Macrophage$pseudotime
+co_pseudotime <- t(as.data.frame(co_pseudotime ))
+new_co_matrix <- rbind(cochlea_matrix, co_pseudotime) 
+new_co_matrix <- as.matrix(new_co_matrix)
+new_co_matrix1 <- new_co_matrix[ ,order(new_co_matrix["co_pseudotime", ])] 
+  
+row_sums <- apply(utri_all_matrix, 1, sum)
+utri_all_matrix<- utri_all_matrix[row_sums != 0, ]
+  
+y_list <- list()
+for (i in 1:nrow(utricle_matrix)) {
+value <- as.numeric(utricle_matrix[i, ])
+y <- smooth.spline(value, df = 8)$y
+y_list[[i]] <- y
+}
+row_names <- row.names(utricle_matrix)
+new_utri_matrix <- as.data.frame(do.call(rbind, y_list), row.names = row_names)
+
+
+color1 <- colorRamp2(c(-1, 0, 10), c("blue", "white", "red"))
+color2 <- colorRamp2(c(-0.1, 0, 0.1,0.25,0.5, 1), c("white",  "beige", "lightgoldenrod1", "gold1", "orange", "orangered"))
+color3 <- colorRamp2(c(-0.1, 0, 0.25,0.5, 0.75, 1), c("white", "aliceblue","lightskyblue","skyblue2", "royalblue", "blue"))
+color4 <- colorRamp2(c(-0.1, 0, 0.25,0.5, 0.75, 1), c("white", "pink", "lightcoral", "coral", "tomato", "red"))
+colorRampPalette(c("blue", "white", "red"))
+color5 <- colorRamp2(c(-2, 0, 2), c("#F16D6C", "white", "#4F94CD"))
+
+Heatmap(new_utri_matrix,
+name = "Gene Expression",
+col = color1,
+color_space = "LAB",
+cluster_rows = T,
+cluster_columns = F,
+show_row_names = TRUE,
+show_column_names = FALSE,
+column_title = "Pseudotime",
+column_title_side = "top",
+row_names_gp = gpar(fontsize = 8),
+border = NA )
+
+
+Heatmap(utricle_matrix,
+        name = "Gene Expression",
+        col = color_fun,
+        cluster_rows = TRUE,
+        clustering_distance_rows = "euclidean",
+        clustering_method_rows = "complete",
+        show_row_names = TRUE,
+        show_column_names = FALSE,
+        column_title = "Pseudotime",
+        column_title_side = "top",
+        column_order = pseudotime_data, 
+        row_names_gp = gpar(fontsize = 8), 
+        border = NA )
 
 
 
