@@ -8,13 +8,17 @@
 - Code contributors: Feng Zhang and Yunjie Li
 
 ## Code
-  ### Cellranger 
-	````unix
-   step01_cellranger_snRNA.sh
+### Cellranger 
+````unix
+step01_cellranger_snRNA.sh
 ````
 
-
-### UMAP
+### QC, analysis and combination
+````unix
+step02_QC_analysis/
+````
+Scripts in this folder hold the function of following steps:
+-
 
 
 
