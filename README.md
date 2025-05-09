@@ -17,8 +17,11 @@ step01_cellranger_snRNA.sh
 ````unix
 step02_QC_analysis/
 ````
-Scripts in this folder hold the function of following steps:
--
+- Scripts in this folder hold the function of following steps:
+  - quality control
+  - normalisation through SCTransform
+  - runUmap
+  - combination of the data of different ages
 
 
 
