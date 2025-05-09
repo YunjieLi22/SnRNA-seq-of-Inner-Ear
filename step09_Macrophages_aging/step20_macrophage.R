@@ -133,3 +133,65 @@ dev.off()
 
 
 ################################################
+
+this_pbmc=pbmc.Macrophage
+
+this_vec=this_pbmc@reductions$umap@cell.embeddings
+plot(this_vec, pch=16,col='grey50',cex=0.5,mark = TRUE)
+library(gatepoints)
+selectedPoints <- fhs(this_vec, pch=16,col='red3',cex=0.5,mark = TRUE)
+SELECT=selectedPoints
+
+pbmc.Macrophage=subset(this_pbmc, cells=SELECT)
+
+saveRDS(pbmc.Macrophage, file='data/cochlea_Macrophage.rds')
+
+NNN=10
+this_pbmc=pbmc.Macrophage
+
+DimPlot(this_pbmc, group.by='batch',label=TRUE)+NoLegend()
+
+*utricle
+this_pbmc$time=rep(NA, length(ncol(this_pbmc)))
+this_pbmc$time[which(this_pbmc$orig.ident=='utricle.3m')]=1  
+this_pbmc$time[which(this_pbmc$orig.ident=='utricle.12m')]=2   
+this_pbmc$time[which(this_pbmc$orig.ident=='utricle.22m')]=3  
+*cochlea
+this_pbmc$time[which(this_pbmc$orig.ident=='cochlea.3m')]=1
+this_pbmc$time[which(this_pbmc$orig.ident=='cochlea.12m')]=2
+this_pbmc$time[which(this_pbmc$orig.ident=='cochlea.24m')]=3
+this_pbmc$time[which(this_pbmc$orig.ident=='cochlea.24mbu')]=3
+
+this_pbmc$time[which(this_pbmc$time == "3m")]=1 
+this_pbmc$time[which(this_pbmc$time == "12m")]=2
+this_pbmc$time[which(this_pbmc$time == "24m")]=3
+
+this_vec=this_pbmc@reductions$umap@cell.embeddings
+
+source('https://gitee.com/jumphone/Vector/raw/master/Vector.R')
+
+###scale真实时间
+this_v=scale(as.numeric(this_pbmc$time))
+this_col=vector.vcol(this_v,CN=c('indianred1','gold1','royalblue1'),CV=c(-1,0,1))
+plot(this_vec, cex=0.5,pch=16,col=this_col,main='orig.time')
+
+###建立回归关系（真实时间与细胞特性）——预测时间
+this_fit=lm(this_pbmc$time~.:.,data=as.data.frame(this_vec))
+pred.time=predict(this_fit)
+
+###scale预测时间
+this_v=scale(pred.time)
+this_col=vector.vcol(this_v,CN=c('indianred1','gold1','royalblue1'),CV=c(-1,0,1))
+plot(this_vec, cex=0.5,pch=16,col=this_col,main='fitted.time')
+
+"#BFC6FF", "#FFC1DF", "#8EFFB5"
+
+OUT=vector.buildGrid(this_vec, N=NNN,SHOW=F)
+OUT=vector.buildNet(OUT, CUT=1, SHOW=F)
+OUT$VALUE=max(pred.time)-pred.time
+OUT=vector.gridValue(OUT,SHOW=TRUE)
+OUT=vector.autoCenter(OUT,UP=0.9,SHOW=F)
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=F)
+pbmc.Macrophage$pseudotime=OUT$P.PS
+FeaturePlot(pbmc.Macrophage,features=c('pseudotime'))
+
