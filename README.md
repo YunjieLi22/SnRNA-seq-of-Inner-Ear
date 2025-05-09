@@ -9,5 +9,5 @@
 
 ## Code
   ### Cellranger and QC
-  - 
-
+  - step01_cellranger_snRNA.sh
+  - step02_QC_analysis/
