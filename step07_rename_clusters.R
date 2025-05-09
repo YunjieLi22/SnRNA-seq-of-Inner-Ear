@@ -33,7 +33,28 @@ COCHLEA$final.clst.sub.label[which(COCHLEA$new.clst.sub %in% c('17'))]='Astrocyt
 COCHLEA$final.clst.sub.label[which(COCHLEA$new.clst.sub %in% c('18'))]='Melanocyte'
 COCHLEA$final.clst.sub.label[which(COCHLEA$new.clst.sub %in% c('19'))]='Endothelial.cell'
 
-
+UTRICLE$final.clst.sub.label = UTRICLE$new.clst.sub
+UTRICLE$final.clst.sub.label[which(UTRICLE$new.clst.sub %in% c('0'))]='Extrastriolar.SC'
+UTRICLE$final.clst.sub.label[which(UTRICLE$new.clst.sub %in% c('1'))]='Type.II.HC.1'
+UTRICLE$final.clst.sub.label[which(UTRICLE$new.clst.sub %in%  c('2'))]='Type.II.HC.2'
+UTRICLE$final.clst.sub.label[which(UTRICLE$new.clst.sub %in% c('3.1'))]='Fibrocyte.1'
+UTRICLE$final.clst.sub.label[which(UTRICLE$new.clst.sub %in% c('3.2'))]='Fibrocyte.3'
+UTRICLE$final.clst.sub.label[which(UTRICLE$new.clst.sub %in%  c('4'))]='Roof.epithelial.cell.1'
+UTRICLE$final.clst.sub.label[which(UTRICLE$new.clst.sub %in%  c('5'))]='Type.I.HC.1'
+UTRICLE$final.clst.sub.label[which(UTRICLE$new.clst.sub %in%  c('7'))]='Translational epithelial cell'
+UTRICLE$final.clst.sub.label[which(UTRICLE$new.clst.sub %in%  c('8'))]='Roof.epithelial.cell.2'
+UTRICLE$final.clst.sub.label[which(UTRICLE$new.clst.sub %in%  c('9'))]='Roof.epithelial.cell.2'
+UTRICLE$final.clst.sub.label[which(UTRICLE$new.clst.sub %in%  c('10'))]='Roof.epithelial.cell 2'
+UTRICLE$final.clst.sub.label[which(UTRICLE$new.clst.sub %in%  c('11'))]='Striolar.SC'
+UTRICLE$final.clst.sub.label[which(UTRICLE$new.clst.sub %in%  c('12'))]='Fibrocyte.2'
+UTRICLE$final.clst.sub.label[which(UTRICLE$new.clst.sub %in%  c('13'))]='Type.I.HC.2'
+UTRICLE$final.clst.sub.label[which(UTRICLE$new.clst.sub %in%  c('14'))]='Fibrocyte.4'
+UTRICLE$final.clst.sub.label[which(UTRICLE$new.clst.sub %in%  c('15'))]='Astrocytes'
+UTRICLE$final.clst.sub.label[which(UTRICLE$new.clst.sub %in%  c('16.1'))]='Macrophage'
+UTRICLE$final.clst.sub.label[which(UTRICLE$new.clst.sub %in%  c('16.2'))]='Microglia'
+UTRICLE$final.clst.sub.label[which(UTRICLE$new.clst.sub %in% c('17'))]='Vestibular ganglion neuron'
+UTRICLE$final.clst.sub.label[which(UTRICLE$new.clst.sub %in%  c('18'))]='Endothelial.cell'
+UTRICLE$final.clst.sub.label[which(UTRICLE$new.clst.sub %in% c('19'))]='Melanocyte'
 
 UL=cbind(paste0('Utricle.',UTRICLE$final.clst.sub.label), paste0('U.',UTRICLE$new.clst.sub))
 CL=cbind(paste0('Cochlea.',COCHLEA$final.clst.sub.label), paste0('C.',COCHLEA$new.clst.sub))
