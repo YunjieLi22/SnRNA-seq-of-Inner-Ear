@@ -170,16 +170,16 @@ this_vec=this_pbmc@reductions$umap@cell.embeddings
 
 source('https://gitee.com/jumphone/Vector/raw/master/Vector.R')
 
-###scale真实时间
+
 this_v=scale(as.numeric(this_pbmc$time))
 this_col=vector.vcol(this_v,CN=c('indianred1','gold1','royalblue1'),CV=c(-1,0,1))
 plot(this_vec, cex=0.5,pch=16,col=this_col,main='orig.time')
 
-###建立回归关系（真实时间与细胞特性）——预测时间
+
 this_fit=lm(this_pbmc$time~.:.,data=as.data.frame(this_vec))
 pred.time=predict(this_fit)
 
-###scale预测时间
+
 this_v=scale(pred.time)
 this_col=vector.vcol(this_v,CN=c('indianred1','gold1','royalblue1'),CV=c(-1,0,1))
 plot(this_vec, cex=0.5,pch=16,col=this_col,main='fitted.time')
@@ -194,4 +194,47 @@ OUT=vector.autoCenter(OUT,UP=0.9,SHOW=F)
 OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=F)
 pbmc.Macrophage$pseudotime=OUT$P.PS
 FeaturePlot(pbmc.Macrophage,features=c('pseudotime'))
+
+
+
+
+
+
+
+
+ALL_ENTREZ=mapIds(org.Mm.eg.db, rownames(pbmc), 'ENTREZID', 'SYMBOL')
+
+###############
+POS.CUT=0.1
+NEG.CUT= -0.1
+
+###########################################
+    this_sig_gene=names(this_cor)[which(this_cor>POS.CUT)]
+    this_sig_entrez=mapIds(org.Mm.eg.db, this_sig_gene, 'ENTREZID', 'SYMBOL')
+    
+    this_ego <- enrichGO(gene = this_sig_entrez, 
+                   universe = ALL_ENTREZ,OrgDb = org.Mm.eg.db,ont = "ALL", 
+                   pAdjustMethod = "BH",pvalueCutoff = 0.05,
+                   qvalueCutoff = 0.1,readable = TRUE)
+
+    this_out=this_ego@result
+    write.table(this_out, paste0('./PseudotimeGO_POS_14_go.tsv'),sep='\t',quote=F,col.names=T,row.names=F)
+
+
+#######################################
+    this_sig_gene=names(this_cor)[which(this_cor< NEG.CUT)]
+    this_sig_entrez=mapIds(org.Mm.eg.db, this_sig_gene, 'ENTREZID', 'SYMBOL')
+    this_ego <- enrichGO(gene = this_sig_entrez, 
+                   universe = ALL_ENTREZ,OrgDb = org.Mm.eg.db,ont = "ALL", 
+                   pAdjustMethod = "BH",pvalueCutoff = 0.05,
+                   qvalueCutoff = 0.1,readable = TRUE)
+
+    this_out=this_ego@result
+    write.table(this_out, paste0('./PseudotimeGO_NEG_14_go.tsv'),sep='\t',quote=F,col.names=T,row.names=F)
+
+#########################################################
+
+
+
+
 
