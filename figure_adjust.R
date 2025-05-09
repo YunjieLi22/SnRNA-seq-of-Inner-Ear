@@ -1,5 +1,6 @@
-setwd("/Users/aliciajansvanlee/Research/research data/aging subject/singleCell_20240123/")
-
+#######################################################################################################
+# Loading Packages
+#######################################################################################################
 library(devtools)
 library(Seurat)
 library(ggplot2)
@@ -27,10 +28,6 @@ library(org.Mm.eg.db)
 #/home/toolkit/tools/R4*/bin/R
 
 setwd('/home/disk/database/data/SingleCellAuditory_Xia/analysis/RDS_202204new')
-
-library(Seurat)
-library(dplyr)
-library(patchwork)
 
 UTRICLE = readRDS('/home/disk/database/data/SingleCellAuditory_Xia/analysis/RDS_202204new/UTRICLE_SEURAT.rds')
 COCHLEA = readRDS('/home/disk/database/data/SingleCellAuditory_Xia/analysis/RDS_202204new/COCHLEA_SEURAT.rds')
@@ -82,11 +79,8 @@ DimPlot(COMBINE, reduction='umap', group.by='clst',pt.size=0.1,label=T,label.siz
 dev.off()
 
 
-
-
-
 #######################################################################################################
-# 绘制 DotPlot
+# DotPlot
 #######################################################################################################
 
 
@@ -102,14 +96,6 @@ all.gene=rownames(pbmc)
 pbmc=ScaleData(object = pbmc, features =all.gene)
 
 ################################################
-
-
-library(Seurat)
-library(dplyr)
-library(patchwork)
-
-library(ggplot2)
-library(stringr)
 
 MK1=c('Drp2','Plp1')
 MK2=c('Cyyr1','Abcb1a')
@@ -166,13 +152,6 @@ pbmc=ScaleData(object = pbmc, features =all.gene)
 
 ################################################
 
-
-library(Seurat)
-library(dplyr)
-library(patchwork)
-
-library(ggplot2)
-library(stringr)
 
 MK1=c('Emcn','Emilin2')
 MK2=c('Tgfb3','Slc26a7')
@@ -239,9 +218,6 @@ dev.off()
 
 setwd('/home/disk/database/data/SingleCellAuditory_Xia/analysis/RDS_202204new')
 
-library(Seurat)
-library(dplyr)
-library(patchwork)
 
 UTRICLE = readRDS('/home/disk/database/data/SingleCellAuditory_Xia/analysis/RDS_202204new/UTRICLE_SEURAT.rds')
 COCHLEA = readRDS('/home/disk/database/data/SingleCellAuditory_Xia/analysis/RDS_202204new/COCHLEA_SEURAT.rds')
@@ -362,7 +338,7 @@ while(i<=ncol(MEAN)){
 }
 
 ##################################
-library(dplyr)
+
 N=10
 topN <- pbmc.markers %>% group_by(cluster) %>% top_n(n = N, wt = avg_log2FC)
 
@@ -404,7 +380,6 @@ dev.off()
 # Finding Top Markers， Dotplot
 #######################################################################################################
 
-
 cochlea_markers <- c("Emcn", "Emilin2", "Tgfb3", "Slc26a7", "Ерус", "Lgr5", "Efemp1", "Kcnb2", 
                      "Dcn",  "Scn7a", "Cd44","Otx2", "Cnmd", "Rspo2", "Ltbp2", "Dnm1", "Slc17a8",
                      "Actn2","Mapk4", "Sorcs3", "Car3", "Gas2", "Cep41", "Strip2", "Slc26a5","Nrg3",
@@ -433,7 +408,7 @@ DotPlot(this_pbmc, features = markers) +theme(axis.text.x = element_text(angle =
 
 
 #######################################################################################################
-# 进行 GO 富集分析
+# GO analysis
 #######################################################################################################
 
 
@@ -446,11 +421,6 @@ library(enrichplot)
 library(org.Hs.eg.db)
 library(clusterProfiler)
 library(org.Mm.eg.db)
-
-
-
-
-
 
 #########################################
 pbmc=UTRICLE 
@@ -484,11 +454,6 @@ while(i<=length(UNIQ_CLST)){
   print(this_clst)
   i=i+1
 }
-
-
-
-
-
 
 
 #########################################
@@ -526,12 +491,6 @@ while(i<=length(UNIQ_CLST)){
 
 
 #################################################################
-
-
-
-
-
-
 
 
 
@@ -624,8 +583,6 @@ VlnPlot(pbmc, features=show_genes_1, ncol=2,pt.size=0)
 VlnPlot(pbmc, features=show_genes_2, ncol=2,pt.size=0)
 
 dev.off()
-
-
 
 
 
@@ -737,7 +694,7 @@ dev.off()
 
 
 #######################################################################################################
-# time-related VlnPlot
+# Time-related VlnPlot
 #######################################################################################################
 
 
