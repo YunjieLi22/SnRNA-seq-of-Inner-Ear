@@ -1394,50 +1394,19 @@ i=i+1
 dev.off()
 
 
+#################################################################################################################
+# Drawing Adjustment
+#################################################################################################################
 
-
-
-
-
-
-ChR_marker <- c("Chrm3", "Chrna10")
-GluR_marker <- c("Gria3", "Grid1", "Grid2", "Grip1")
-GluTr_marker <- c("Slc1a3", "Slc1a7",  "Slc17a8", "Slc25a12")
-Ca_channel <- c("Camk2d", "Camsap2", "Camta1", "Cacna1d", "Cacna1e", "Cacna2d1", "Cacna2d3", "Cacna2d4")
-Na_K_trans <- c("Atp1a1","Atp1a2","Atp1b1","Atp2a2","Atp2b1","Atp2b2","Atp2b3","Atp2b4","Atp2c1","Atp6v0a1","Atp8a1","Atp8a2","Atp11a","Atp11c","Atp13a3")
-K_channel <- c("Hcn1", "Kcna10", "Kcnab1", "Kcnb2", "Kcnc2", "Kcnd3", "Kcnh7", "Kcnh8","Kcnip4","Kcnj3","Kcnj6","Kcnj16","Kcnma1","Kcnq1","Kcnq1ot1","Kcnq3")
-Na_channel <- c("Nalcn","Scn1a","Scn2a","Scn3a","Scn4a","Scn5a","Scn7a","Scn8a","Scn9a")
-
-##utricke cytokine
-utri_cytokine <- c("Il27", "Il17f", "Il1b", "Il1f9", "Il17d", "Tnfaip8", "Tnfaip8l2", "Tnfsf11", "Tnfsf10", "Traf3ip3", "Tnf", "Tnfsf8", "Ccl5", "Fgf13", "Ifngr1", "Ifng", "Vegfb", "Vegfc")
-##cochlea cytokin
-co_cytokine <- c("Il15", "Il27", "Il34", "Il18bp", "Il12a", "Il6st", "Tnfaip2", "Tnfsf8", "Tnfsf10", "Tnfaip8", "Tnfaip3", "Tnfsf13b", "Tnfsf13", "Tnfsf11",
-"Tnfsf13os", "Tnf", "Tnfaip6",  "Fgf1","Ccl7", "Ccl11", "Ccl17", "Ccl22", "Ccl24", "Ccl5", "Ccl9", "Ccl6", "Fgf18", "Fgf9", "Fgf11", "Fgf13", "Ifnk", "Ifngas1", "Vegfc")
-
-
-
-
-#绘制热图及调整格式
-pdf("/pictures/heatmap_co.pdf", width = 12, height = 12)
-heatmap_co
-dev.off()
-cochlea_300 <- subset(cochlea_new, downsample=300 )
-heatmap_co <- DoHeatmap(cochlea_300, features = top10_co$gene)+ scale_fill_gradient2(low = "#0000E3", mid = "#ffffff", high = "#CE0000")+ theme(axis.text.y = element_blank())+theme(axis.title.x = element_text(size =2 ))
-pdf("pictures/heatmap_cochlea6.pdf", width = 12, height = 12)
-heatmap_co
-dev.off() 
-##scale_data处理后表达值
-
-#绘制气泡图
-pdf("pictures/pictures_补/F3_epi_3m_cochlea_dotplot.pdf", width = 12, height = 5)
-DotPlot(epi_cochlea_3m, features =split(top6_3m$gene, top6_3m$cluster)) +theme(axis.text.x = element_text(angle = 90))+theme(axis.ticks.x = element_blank(), axis.ticks.y = element_blank(), axis.text.y = element_blank(), axis.title.y = element_blank())+scale_color_gradientn(colours = c('#330066','#336699','#66CC66','#FFCC33'))+theme(panel.border = element_rect(color = "black"), panel.spacing = unit(1, "mm"))
-DotPlot(epi_cochlea_3m, features =top6_3m$gene) +theme(axis.text.x = element_text(angle = 90))+theme(axis.ticks.x = element_blank(), axis.ticks.y = element_blank(),  axis.title.y = element_blank())+scale_color_gradientn(colours = c('#330066','#336699','#66CC66','#FFCC33'))+theme(panel.border = element_rect(color = "black"), panel.spacing = unit(1, "mm"))
-##complexheatmap绘制气泡图
+#Dotplot
+this_pbmc= xxx
+this_markers= xxx
+DotPlot(this_pbmc, features = this_markers) +theme(axis.text.x = element_text(angle = 90))+theme(axis.ticks.x = element_blank(), axis.ticks.y = element_blank(), axis.text.y = element_blank(), axis.title.y = element_blank())+scale_color_gradientn(colours = c('#330066','#336699','#66CC66','#FFCC33'))+theme(panel.border = element_rect(color = "black"), panel.spacing = unit(1, "mm"))
+##using complexheatmap
 col_fun <- colorRamp2(c(-2, 0, 1,2),c('#330066','#336699','#66CC66','#FFCC33'))
-（先绘制dotplot后提取数据
-p <- dotppot()
+p <- Dotppot()
 df <- p$data
-###表达矩阵
+
 exp_mat<-df %>% 
   select(-pct.exp, -avg.exp) %>%  
   pivot_wider(names_from = id, values_from = avg.exp.scaled) %>% 
@@ -1445,7 +1414,7 @@ exp_mat<-df %>%
 row.names(exp_mat) <- exp_mat$features.plot  
 exp_mat <- exp_mat[,-1] %>% as.matrix()
 head(exp_mat)
-###表达比例矩阵
+
 percent_mat<-df %>% 
   select(-avg.exp, -avg.exp.scaled) %>%  
   pivot_wider(names_from = id, values_from = pct.exp) %>% 
@@ -1469,7 +1438,7 @@ Heatmap(exp_mat,
         cell_fun = cell_fun,
         row_names_gp = gpar(fontsize = 5),
         border = "black")
-###构建表达点的大小
+
 layer_fun = function(j, i, x, y, w, h, fill){
   grid.rect(x = x, y = y, width = w, height = h, 
             gp = gpar(col = NA, fill = NA))
@@ -1501,36 +1470,13 @@ hp<- Heatmap(exp_mat,
 )
 draw( hp, annotation_legend_list = lgd_list)
 
-col_fun <- colorRamp2(c(-2, -1, 0, 1, 2), c("#5DA5D5",  "#A5C5E4","white", "#FFCAC4",  "#F8847F"))
-df <- p$data
-exp_mat<-df %>%
-  select(-pct.exp, -avg.exp) %>%
-  pivot_wider(names_from = id, values_from = avg.exp.scaled) %>%
-  as.data.frame()
-row.names(exp_mat) <- exp_mat$features.plot
-exp_mat <- exp_mat[,-1] %>% as.matrix()
-exp_mat <- t(exp_mat) #调转行与列
 
-percent_mat <- df %>%
-  dplyr::select(-avg.exp, -avg.exp.scaled) %>%
-  pivot_wider(names_from = id, values_from = pct.exp) %>%
-  as.data.frame()
-row.names(percent_mat) <- percent_mat$features.plot
-percent_mat <- percent_mat[,-1] %>% as.matrix()
-
-#umap
-FeaturePlot(cochlea_3m, features = "Atp2a3", reduction = "umap")+scale_color_gradientn(colours = c('#E0E0E0','#FFFBBB','#00DDDD','#005AB5','#000079'))
-FeaturePlot(utricle_HC, features = "Agbl1", reduction = "umap", label = T)+scale_color_gradientn(colours = c('#E0E0E0','#FFFBBB','#00DDDD','#005AB5','#000079'))+ theme_dr(xlength = 0.2, ylength = 0.2, arrow = arrow(length = unit(0.2, "inches"),type = "closed")) +theme(panel.grid = element_blank(), axis.title = element_text(face = 2,hjust = 0.03))
-c("#FFCC22","#E6550D","#FDAE6B","#FF7F00","#843C39","#3182BD", "#54990F",  "#1B9E77")
-cols <- c('#E0E0E0','#FFFBBB',"#FFCC22","#FDAE6B","#FF7F00","#E6550D","#843C39")
-
-#vlnplot
+#Umap
+FeaturePlot(this_pbmc, features = this_markers, reduction = "umap", label = T)+scale_color_gradientn(colours = c('#E0E0E0','#FFFBBB','#00DDDD','#005AB5','#000079'))+ theme_dr(xlength = 0.2, ylength = 0.2, arrow = arrow(length = unit(0.2, "inches"),type = "closed")) +theme(panel.grid = element_blank(), axis.title = element_text(face = 2,hjust = 0.03))
 
 
-
-
-#火山图
-EnhancedVolcano(HC_markers3,lab = HC_markers3$...1, x="avg_log2FC", y= "p_val", selectLab = c(down, up),
+#Volcano plot
+EnhancedVolcano(this_pbmc,lab = this_markers, x="avg_log2FC", y= "p_val", selectLab = c(down, up),
                  xlab = bquote(~Log[2]~'fold change'),
                 title = "OHC VS IHC",  
                  labSize = 3.0, 
@@ -1545,10 +1491,7 @@ EnhancedVolcano(HC_markers3,lab = HC_markers3$...1, x="avg_log2FC", y= "p_val", 
                  widthConnectors = 1.0, 
                  colConnectors = "black")
 
-#特定基因热图
-cochlea_OHC <- subset(cochlea, cells= colnames(cochlea)[which(cochlea$Final_idents == "OHC")])
-utricle_1 <- subset(utricle, cells= colnames(utricle)[which(utricle$Idents == "TypeII HC1")])
-
+#Heatmap
 .createMatrix <- function(pbmc){
     scale_data <- pbmc@assays[["RNA"]]@scale.data
     pbmc_matrix <- scale_data[rownames(scale_data) %in% RNA_splicing$`RNA splicing` , ]
@@ -1571,255 +1514,13 @@ Heatmap(utricle_matrix,
         column_split = c(rep("3m", 732), rep("12m", 642), rep("22m", 467)),
         top_annotation= HeatmapAnnotation(foo = anno_block(gp = gpar(fill = 2:6), labels = c("3m","12m","22m") )))
 
-utricle_2_markers_12vs3 <- FindMarkers(utricle_2, ident.1 = "3m", ident.2 = "12m")
-utricle_2_markers_22vs12 <- FindMarkers(utricle_2, ident.1 = "12m", ident.2 = "22m")
-utricle_2_markers_22vs3 <- FindMarkers(utricle_2, ident.1 = "3m", ident.2 = "22m")
-
-utricle_2_markers_12vs3 <- utricle_2_markers_12vs3[ rownames(utricle_2_markers_12vs3) %in% utricle_1_markers$Genes,  ]
-utricle_2_markers_22vs12 <- utricle_2_markers_22vs12[ rownames(utricle_2_markers_22vs12) %in% utricle_1_markers$Genes,  ]
-utricle_2_markers_22vs3 <- utricle_2_markers_22vs3[ rownames(utricle_2_markers_22vs3) %in% utricle_1_markers$Genes,  ]
 
 
 
-#拟时序热图
-##手动拟合真实信息
-this_pbmc=pbmc.Macrophage
-
-this_vec=this_pbmc@reductions$umap@cell.embeddings
-plot(this_vec, pch=16,col='grey50',cex=0.5,mark = TRUE)
-library(gatepoints)
-selectedPoints <- fhs(this_vec, pch=16,col='red3',cex=0.5,mark = TRUE)
-SELECT=selectedPoints
-
-pbmc.Macrophage=subset(this_pbmc, cells=SELECT)
-
-saveRDS(pbmc.Macrophage, file='data/cochlea_Macrophage.rds')
-
-NNN=10
-this_pbmc=pbmc.Macrophage
-
-DimPlot(this_pbmc, group.by='batch',label=TRUE)+NoLegend()
-
-*utricle
-this_pbmc$time=rep(NA, length(ncol(this_pbmc)))
-this_pbmc$time[which(this_pbmc$orig.ident=='utricle.3m')]=1  
-this_pbmc$time[which(this_pbmc$orig.ident=='utricle.12m')]=2   
-this_pbmc$time[which(this_pbmc$orig.ident=='utricle.22m')]=3  
-*cochlea
-this_pbmc$time[which(this_pbmc$orig.ident=='cochlea.3m')]=1
-this_pbmc$time[which(this_pbmc$orig.ident=='cochlea.12m')]=2
-this_pbmc$time[which(this_pbmc$orig.ident=='cochlea.24m')]=3
-this_pbmc$time[which(this_pbmc$orig.ident=='cochlea.24mbu')]=3
-
-this_pbmc$time[which(this_pbmc$time == "3m")]=1 
-this_pbmc$time[which(this_pbmc$time == "12m")]=2
-this_pbmc$time[which(this_pbmc$time == "24m")]=3
-
-this_vec=this_pbmc@reductions$umap@cell.embeddings
-
-source('https://gitee.com/jumphone/Vector/raw/master/Vector.R')
-
-###scale真实时间
-this_v=scale(as.numeric(this_pbmc$time))
-this_col=vector.vcol(this_v,CN=c('indianred1','gold1','royalblue1'),CV=c(-1,0,1))
-plot(this_vec, cex=0.5,pch=16,col=this_col,main='orig.time')
-
-###建立回归关系（真实时间与细胞特性）——预测时间
-this_fit=lm(this_pbmc$time~.:.,data=as.data.frame(this_vec))
-pred.time=predict(this_fit)
-
-###scale预测时间
-this_v=scale(pred.time)
-this_col=vector.vcol(this_v,CN=c('indianred1','gold1','royalblue1'),CV=c(-1,0,1))
-plot(this_vec, cex=0.5,pch=16,col=this_col,main='fitted.time')
-
-"#BFC6FF", "#FFC1DF", "#8EFFB5"
-
-OUT=vector.buildGrid(this_vec, N=NNN,SHOW=F)
-OUT=vector.buildNet(OUT, CUT=1, SHOW=F)
-OUT$VALUE=max(pred.time)-pred.time
-OUT=vector.gridValue(OUT,SHOW=TRUE)
-OUT=vector.autoCenter(OUT,UP=0.9,SHOW=F)
-OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=F)
-pbmc.Macrophage$pseudotime=OUT$P.PS
-FeaturePlot(pbmc.Macrophage,features=c('pseudotime'))
-
-##构建表达矩阵
 
 
-co_expression_matrix <- GetAssayData(this_pbmc, slot = "data")[rownames(this_pbmc) %in% co_genes, ]
-cochclea_matrix <- as.data.frame(co_expression_matrix)
-co_pseudotime <- pbmc.Macrophage$pseudotime
-co_pseudotime <- t(as.data.frame(co_pseudotime ))
-new_co_matrix <- rbind(cochlea_matrix, co_pseudotime) (#注意列数匹配）
-new_co_matrix <- as.matrix(new_co_matrix)
-new_co_matrix1 <- new_co_matrix[ ,order(new_co_matrix["co_pseudotime", ])] (#按pseudotime排序)
 
 
-##将每一行都做平滑处理(注意：不能有NA值)
-  
-###去除全0的行
-row_sums <- apply(utri_all_matrix, 1, sum)
-utri_all_matrix<- utri_all_matrix[row_sums != 0, ]
-  
-y_list <- list()
-for (i in 1:nrow(utricle_matrix)) {
-value <- as.numeric(utricle_matrix[i, ])
-y <- smooth.spline(value, df = 8)$y
-y_list[[i]] <- y
-}
-row_names <- row.names(utricle_matrix)
-new_utri_matrix <- as.data.frame(do.call(rbind, y_list), row.names = row_names)
-
-##粗略判断上升/下降趋势
-
-###方法一(计算基因表达值与pseudotime的相关系数)
-last_row <- utri_all_matrix[nrow(utri_all_matrix), ]
-mat <- utri_all_matrix
-cor_with_last_row <- apply(mat, 1, function(row) {
-if(all(is.numeric(row)) && all(is.numeric(last_row))) {
-cor(row, last_row, use = "complete.obs")
-} else {
-return(NA)
-}
-})
-print(cor_with_last_row)
-####筛选上升和下降的基因
-> co_POS <- co_cor[10:10384, ]
-> View(co_POS)
-> POS_row <- co_POS$...1
-> cochlea_POS <- df_co[rownames(df_co) %in% POS_row,  ]
-> View(cochlea_POS)
-> co_NEG <- co_cor[10385:12965, ]
-> NEG_row <- co_NEG$...1
-> cochlea_NEG <- df_co[rownames(df_co) %in% NEG_row, ]
-
-###方法二
-df$trend <- apply(df[, -1], 1, function(row) {
-  cums <- na.omit(diff(row))
-  if (length(cums) == 0) {
-    return(NA)
-  }
-  trend <- ifelse(cums > 0, "+", ifelse(cums < 0, "-", "E"))
-  upward <- sum(trend == "+")
-  downward <- sum(trend == "-")
-  if (upward > downward) {
-    "上升"
-  } else if (downward > upward) {
-    "下降"
-  } else {
-    "波动"
-  }
-})
-df <- subset(df, trend != "波动")  #去除波动行
-
-df$trend <- factor(df$trend, levels = c("上升", "下降"))  #按“上升”/“下降”排列
-df <- df[order(df$trend), ]  
-
-write.csv(df, file="data/df_co.csv")
-#保存后手动去除未知基因
-
-##配色
-color1 <- colorRamp2(c(-1, 0, 10), c("blue", "white", "red"))
-color2 <- colorRamp2(c(-0.1, 0, 0.1,0.25,0.5, 1), c("white",  "beige", "lightgoldenrod1", "gold1", "orange", "orangered"))
-color3 <- colorRamp2(c(-0.1, 0, 0.25,0.5, 0.75, 1), c("white", "aliceblue","lightskyblue","skyblue2", "royalblue", "blue"))
-color4 <- colorRamp2(c(-0.1, 0, 0.25,0.5, 0.75, 1), c("white", "pink", "lightcoral", "coral", "tomato", "red"))
-colorRampPalette(c("blue", "white", "red"))
-color5 <- colorRamp2(c(-2, 0, 2), c("#F16D6C", "white", "#4F94CD"))
-
-pdf("pictures/pictures_补/Figure5/utri_heatmap_pseudotime.pdf", height = 8, width = 5)
-Heatmap(new_utri_matrix,
-name = "Gene Expression",
-col = color1,
-color_space = "LAB",
-cluster_rows = T,
-cluster_columns = F,
-show_row_names = TRUE,
-show_column_names = FALSE,
-column_title = "Pseudotime",
-column_title_side = "top",
-row_names_gp = gpar(fontsize = 8),
-border = NA )
 
 
-Heatmap(utricle_matrix,
-        name = "Gene Expression",
-        col = color_fun,
-        cluster_rows = TRUE,
-        clustering_distance_rows = "euclidean",
-        clustering_method_rows = "complete",
-        show_row_names = TRUE,
-        show_column_names = FALSE,
-        column_title = "Pseudotime",
-        column_title_side = "top",
-        column_order = pseudotime_data, 
-        row_names_gp = gpar(fontsize = 8), 
-        border = NA )
 
-this_pbmc=pbmc.Macrophage
-
-
-#GOterm 差异轨迹
-library(ggplot2)
-library(stringr)
-
-library(DOSE)
-library(GSEABase) 
-library(enrichplot)
-library(org.Hs.eg.db)
-library(clusterProfiler)
-
-library(org.Mm.eg.db)
-
-
-this_cor=cor( t(as.matrix(this_pbmc@assays$RNA@data)),this_pbmc$pseudotime)
-this_cor[which(is.na(this_cor))]=0
-this_cor=this_cor[,1]
-names(this_cor)=rownames(this_pbmc)
-plot(sort(this_cor),type='p',pch=16)
-write.table(sort(this_cor), paste0('UTRICLE_Macrophage_TIME/PseudotimeGeneCor_Macrophage.tsv'),sep='\t',quote=F,col.names=F,row.names=T)
-
-ALL_ENTREZ=mapIds(org.Mm.eg.db, rownames(this_pbmc), "ENTREZID", "SYMBOL")
-
-POS.CUT=0.1
-NEG.CUT= -0.1
-
-this_sig_gene=names(this_cor)[which(this_cor>POS.CUT)]
-this_sig_entrez=mapIds(org.Mm.eg.db, this_sig_gene, 'ENTREZID', 'SYMBOL')
-
-this_ego <- enrichGO(gene = this_sig_entrez, 
-                     universe = ALL_ENTREZ,OrgDb = org.Mm.eg.db,ont = "ALL", 
-                     pAdjustMethod = "BH",pvalueCutoff = 0.05,
-                     qvalueCutoff = 0.1,readable = TRUE)
-
-this_out1=this_ego@result
-write.table(this_out1, paste0('data/PseudotimeGO_POS_Macrophage_go.tsv'),sep='\t',quote=F,col.names=T,row.names=F)
-
-this_sig_gene=names(this_cor)[which(this_cor< NEG.CUT)]
-this_sig_entrez=mapIds(org.Mm.eg.db, this_sig_gene, 'ENTREZID', 'SYMBOL')
-this_ego <- enrichGO(gene = this_sig_entrez, 
-                     universe = ALL_ENTREZ,OrgDb = org.Mm.eg.db,ont = "ALL", 
-                     pAdjustMethod = "BH",pvalueCutoff = 0.05,
-                     qvalueCutoff = 0.1,readable = TRUE)
-this_out2=this_ego@result
-write.table(this_out2, paste0('data/PseudotimeGO_NEG_Macrophage_go.tsv'),sep='\t',quote=F,col.names=T,row.names=F)
-
-
-#Deq分析
-library(DESeq2)
-
-utricle_2_sampleinfo <- cbind(colnames(utricle_2_counts), utricle_2@meta.data[["time"]])
-col1 <- colnames(utricle_2_counts)
-col2 <- utricle_2@meta.data[["time"]]
-utricle_2_sampleinfo <- matrix(utricle_2_sampleinfo[, 2], nrow = length(col1), dimnames = list(col1, NULL))
-
-utricle_1_counts_12vs3 <- read.csv("data/utricle_1_counts_12vs3.csv", row.names = 1)
-countData <- utricle_1_counts_12vs3
-utricle_1_sampleinfo_12vs3 <- read.csv("data/utricle_1_sampleinfo_12vs3.csv", row.names = 1)
-sampleInfo <- utricle_1_sampleinfo_12vs3
-rownames(sampleInfo) <- colnames(countData)
-dds <- DESeqDataSetFromMatrix(countData, colData = sampleInfo, design = ~ Age)
-dds$Age <- relevel(dds$Age, ref = "3m") 
-dds <- DESeq(dds)
-res <- results(dds)
-write.csv(res, file = "data/utricle_1_12vs3_deq.csv")
