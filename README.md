@@ -45,5 +45,33 @@ step04_only_cochlea/
 ````unix
 step05_combine_analysis.R
 ````
+- This script includes the workflow of analyzing the combination of cochlea and utricle data:
+  - integrating two data using 'BEER' ('https://gitee.com/jumphone/BEER/raw/master/BEER.R')
+ 
+### HC aging analysis
+````unix
+step06_HC_aging/
+````
+- Scripts in this folder depict the overall workflow how we presented the transcriptional features of cochlear and utricular epithelia across ages:
+  - DEG analysis across three ages of both cochlea and utricle
+  - DEG analysis between two types HC of cochlea
+  - DEG analysis across four types HC of utricle
 
+### Identity of Cell Types
+````unix
+step07_ReCluster.R
+step08_rename_clusters.R
+````
+- These two scripts re-adjust the clusters and update cluster IDs.
 
+### Macrophages analysis
+````unix
+step09_Macrophages_aging/
+````
+- Scripts in this folder illustrate the workflow focusing on the analysis of macrophages of both cochlea and utricle.
+
+### Figure adjustment
+````unix
+step10_figure_adjust.R
+````
+- This script presents the detailed adjustment of most of the figures including: UMAP, heatmaps, dotplots, violin plots, volcano plots and so on.
