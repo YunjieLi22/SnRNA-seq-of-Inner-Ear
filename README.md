@@ -41,6 +41,9 @@ step04_only_cochlea/
   - clusters identification
   - markers illustration
 
-
+### Combine analysis
+````unix
+step05_combine_analysis.R
+````
 
 
