@@ -20,8 +20,27 @@ step02_QC_analysis/
 - Scripts in this folder hold the function of following steps:
   - quality control
   - normalisation through SCTransform
-  - runUmap
+  - clustering through runUmap
   - combination of the data of different ages
+ 
+### Only utricle analysis
+````unix
+step03_Only_Utricle/
+````
+- Scripts in this folder perform an overall analysis of only utricle data:
+  - clustring umap
+  - clusters identification
+  - markers illustration
+
+### Only cochlea analysis
+````unix
+step04_only_cochlea/
+````
+- Scripts in this folder perform an overall analysis of only cochlea data:
+  - clustring umap
+  - clusters identification
+  - markers illustration
+
 
 
 
